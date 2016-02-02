@@ -1,6 +1,7 @@
 package com.example.soham.doodle;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.graphics.Bitmap;
@@ -26,6 +27,15 @@ public class DrawingView extends View {
     private Canvas drawCanvas;
     //canvas bitmap
     private Bitmap canvasBitmap;
+
+    public void setColor(String newColor){
+    //set color
+        invalidate();
+        paintColor = Color.parseColor(newColor);
+        drawPaint.setColor(paintColor);
+
+
+    }
 
 
     public DrawingView(Context context, AttributeSet attrs){
