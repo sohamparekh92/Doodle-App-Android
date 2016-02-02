@@ -3,12 +3,14 @@ package com.example.soham.doodle;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.view.MotionEvent;
 
 import java.util.jar.Attributes;
 
-/**
- * Created by Soham on 1/31/2016.
- */
 public class DrawingView extends View {
 
     public DrawingView(Context context, AttributeSet attrs){
