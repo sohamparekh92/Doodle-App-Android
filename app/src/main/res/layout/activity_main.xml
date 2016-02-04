@@ -203,6 +203,11 @@
                 android:onClick="paintClicked"
                 android:src="@drawable/paint"
                 android:tag="#FF000000" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Draw Gyro"
+                android:onClick="goToGyDraw"/>
         </LinearLayout>
     </LinearLayout>
 
