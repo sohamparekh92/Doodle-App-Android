@@ -2,6 +2,10 @@ package com.example.soham.doodle;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.graphics.Bitmap;
@@ -12,13 +16,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.util.TypedValue;
 
-import java.util.jar.Attributes;
+/**
+ * Created by Soham on 2/3/2016.
+ */
+public class GyroDrawingView extends View implements SensorEventListener{
 
-public class DrawingView extends View {
+    Sensor sensor;
+    SensorManager sensorManager;
+    float X;
+    float Y;
+    float touchX;
+    float touchY;
+
 
     //drawing path
     private Path drawPath;
@@ -30,31 +40,31 @@ public class DrawingView extends View {
     private Canvas drawCanvas;
     //canvas bitmap
     private Bitmap canvasBitmap;
-    //Set Brush sizes
-    private float brushSize, lastBrushSize;
 
     public void setColor(String newColor){
-    //set color
+        //set color
         invalidate();
         paintColor = Color.parseColor(newColor);
         drawPaint.setColor(paintColor);
 
 
     }
-    //Clear the canvas to start new drawing
-    public void startNew(){
-        drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
-        invalidate();
-    }
 
-
-    public DrawingView(Context context, AttributeSet attrs){
+    public GyroDrawingView(Context context, AttributeSet attrs){
         super(context,attrs);
 
-        setMyDraw();
+        setMyDraw(context);
     }
 
-    private void setMyDraw(){
+    private void setMyDraw(Context context){
+
+        //X=Y=(float)0.0;
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        //sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        sensorManager.registerListener(this,sensor,SensorManager.SENSOR_DELAY_NORMAL);
+
 
         drawPath = new Path();
         drawPaint = new Paint();
@@ -65,28 +75,7 @@ public class DrawingView extends View {
         drawPaint.setStrokeJoin(Paint.Join.ROUND);
         drawPaint.setStrokeCap(Paint.Cap.ROUND);
         canvasPaint = new Paint(Paint.DITHER_FLAG);
-        brushSize = getResources().getInteger(R.integer.medium_size);
-        lastBrushSize = brushSize;
 
-        drawPaint.setStrokeWidth(brushSize);
-
-    }
-
-    public void setBrushSize(float newSize){
-    //update size
-        float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                newSize, getResources().getDisplayMetrics());
-        brushSize=pixelAmount;
-        drawPaint.setStrokeWidth(brushSize);
-
-    }
-
-    //Update paint object to use the new size
-    public void setLastBrushSize(float lastSize){
-        lastBrushSize=lastSize;
-    }
-    public float getLastBrushSize(){
-        return lastBrushSize;
     }
 
     @Override
@@ -107,17 +96,21 @@ public class DrawingView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-    //detect user touch
-        float touchX = event.getX();
-        float touchY = event.getY();
+        //detect user touch
+         touchX = event.getX();
+         touchY = event.getY();
+
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 drawPath.moveTo(touchX, touchY);
+               // drawPath.lineTo(X, Y);
+
                 break;
-            case MotionEvent.ACTION_MOVE:
-                drawPath.lineTo(touchX, touchY);
-                break;
+
+            /*case MotionEvent.ACTION_MOVE:
+                drawPath.lineTo(X*10, Y*10);
+                break;*/
             case MotionEvent.ACTION_UP:
                 drawCanvas.drawPath(drawPath, drawPaint);
                 drawPath.reset();
@@ -130,4 +123,18 @@ public class DrawingView extends View {
         return true;
     }
 
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+        X = event.values[0];
+        Y = event.values[1];
+        drawPath.lineTo(touchX+X*10,touchY+Y*10);
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 }

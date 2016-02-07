@@ -19,7 +19,7 @@
     android:orientation="vertical"
     tools:context=".DrawGyro" >
 
-    <com.example.soham.doodle.DrawingView
+    <com.example.soham.doodle.GyroDrawingView
         android:id="@+id/gyroDrawing"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
