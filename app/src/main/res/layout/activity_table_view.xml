@@ -10,4 +10,51 @@
     tools:context="com.example.soham.doodle.TableView">
 
 
+    <TableLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/myTable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:shrinkColumns="*"
+        android:stretchColumns="*"
+        android:background="#ffffff">
+
+
+
+        <!-- Row 1 with 3 columns -->
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <TextView
+
+                android:text="ID"
+                android:layout_weight="1"
+                android:background="#dcdcdc"
+                android:textColor="#000000"
+                android:padding="20dip"
+                android:gravity="center"/>
+            <TextView
+
+                android:text="NAME"
+                android:layout_weight="1"
+                android:background="#d3d3d3"
+                android:textColor="#000000"
+                android:padding="20dip"
+                android:gravity="center"/>
+            <TextView
+
+                android:text="COMMENT"
+                android:layout_weight="1"
+                android:background="#cac9c9"
+                android:textColor="#000000"
+                android:padding="20dip"
+                android:gravity="center"/>
+        </TableRow>
+
+
+
+
+    </TableLayout>
 </RelativeLayout>

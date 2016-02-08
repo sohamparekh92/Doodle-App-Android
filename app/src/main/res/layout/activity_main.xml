@@ -16,7 +16,8 @@
         android:layout_height="wrap_content"
         android:text="View Table"
         android:id="@+id/goToTable"
-        android:layout_gravity="right" />
+        android:layout_gravity="right"
+        android:onClick="goToTable" />
 
     <LinearLayout
         android:layout_width="wrap_content"

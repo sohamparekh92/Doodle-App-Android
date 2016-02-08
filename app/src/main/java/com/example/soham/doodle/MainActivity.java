@@ -30,6 +30,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(i);
     }
 
+    public void goToTable(View view) {
+        Intent i = new Intent(this, TableView.class);
+        startActivity(i);
+    }
+
     public void paintClicked(View view){
         //use chosen color
         if(view!=currPaint){
