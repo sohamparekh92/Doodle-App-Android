@@ -20,8 +20,10 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DrawingView drawView;
-    private ImageButton currPaint, drawBtn, newBtn, saveBtn;
-    private float smallBrush, mediumBrush, largeBrush;
+    private ImageButton currPaint, newBtn, saveBtn;
+    private DoodleManager doodle;
+    private DoodleBase dBase;
+
 
     public void goToGyDraw(View view) {
         Intent i = new Intent(this, DrawGyro.class);
@@ -51,14 +53,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Initialize the Brush sizes
-        smallBrush = getResources().getInteger(R.integer.small_size);
-        mediumBrush = getResources().getInteger(R.integer.medium_size);
-        largeBrush = getResources().getInteger(R.integer.large_size);
-        //Initialize Draw Button
-        drawBtn = (ImageButton)findViewById(R.id.brush);
-        //Set OnClickListener to this context for draw button
-        drawBtn.setOnClickListener(this);
         //New file Button
         newBtn = (ImageButton) findViewById(R.id.new_btn);
         //Set OnClickListener to New file button
@@ -71,25 +65,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Initialize draw view with the custom view created
         drawView = (DrawingView)findViewById(R.id.drawing);
 
+        //
+        dBase = new DoodleBase(this,null,null,1);
+
         //Access Layout
         LinearLayout paintLayout = (LinearLayout)findViewById(R.id.paint_colors);
         //Access what's inside the Layout
         currPaint = (ImageButton)paintLayout.getChildAt(0);
        // currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
         currPaint.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.paint_pressed, null));
-
-
-
     }
 
 
 
     @Override
     public void onClick(View view) {
-        String s = "";
+
+
         if(view.getId()==R.id.save){
             final AlertDialog.Builder saveAlert = new AlertDialog.Builder(this);
             saveAlert.setTitle("Save Doodle");
+
+            doodle = new DoodleManager();
             final EditText uInput = new EditText(this);
             uInput.setInputType(InputType.TYPE_CLASS_TEXT);
             saveAlert.setView(uInput);
@@ -99,13 +96,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onClick(DialogInterface dialog, int which) {
                     //Save the drawing code
                     drawView.setDrawingCacheEnabled(true);
+
+
                     String imgSaved = MediaStore.Images.Media.insertImage(
                             getContentResolver(), drawView.getDrawingCache(),
-                            uInput.getText().toString()+".png", "drawing");
+                            uInput.getText().toString() + ".png", "drawing");
                     if (imgSaved != null) {
                         Toast savedToast = Toast.makeText(getApplicationContext(),
                                 "Doodle saved! B)", Toast.LENGTH_SHORT);
+
+                        doodle.setName(uInput.getText().toString());
+                        dBase.addDoodle(doodle);
+
                         savedToast.show();
+
                     } else {
                         Toast unsavedToast = Toast.makeText(getApplicationContext(),
                                 "Oops! Image could not be saved :/", Toast.LENGTH_SHORT);
@@ -122,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
             saveAlert.show();
+
         }
         //Checks if new file button is clicked
         else if(view.getId()==R.id.new_btn){
